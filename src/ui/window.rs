@@ -259,10 +259,11 @@ pub fn build(app: &adw::Application, state: Rc<AppState>) -> adw::ApplicationWin
         let ctx = ctx.clone();
         new_button.connect_clicked(move |_| {
             let ctx = ctx.clone();
-            new_instance::present(&ctx, move |id| {
-                ctx.refresh_instances();
-                ctx.select_instance(&id);
-                ctx.split.set_show_content(true);
+            let ctx_clone = ctx.clone();
+            new_instance::present(&ctx, move |id: String| {
+                ctx_clone.refresh_instances();
+                ctx_clone.select_instance(&id);
+                ctx_clone.split.set_show_content(true);
             });
         });
     }
@@ -270,15 +271,21 @@ pub fn build(app: &adw::Application, state: Rc<AppState>) -> adw::ApplicationWin
     // --- footer buttons ----------------------------------------------------
     {
         let ctx = ctx.clone();
-        accounts_button.connect_clicked(move |_| accounts::present(&ctx));
+        accounts_button.connect_clicked(move |_| {
+            accounts::present(&ctx);
+        });
     }
     {
         let ctx = ctx.clone();
-        news_button.connect_clicked(move |_| news::present(&ctx));
+        news_button.connect_clicked(move |_| {
+            news::present(&ctx);
+        });
     }
     {
         let ctx = ctx.clone();
-        prefs_button.connect_clicked(move |_| settings::present(&ctx));
+        prefs_button.connect_clicked(move |_| {
+            settings::present(&ctx);
+        });
     }
 
     // --- actions (menu) ----------------------------------------------------

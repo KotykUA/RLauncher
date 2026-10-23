@@ -4,7 +4,6 @@ use gtk::gdk;
 use gtk::glib;
 use gtk::prelude::*;
 use libadwaita as adw;
-use adw::prelude::*;
 
 use crate::state::AppState;
 use crate::ui;

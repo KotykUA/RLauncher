@@ -3,8 +3,6 @@
 use std::rc::Rc;
 
 use gtk::prelude::*;
-use libadwaita as adw;
-use adw::prelude::*;
 
 use crate::config::instance::Instance;
 use crate::core::{backend, java, skin};
@@ -142,7 +140,7 @@ pub fn build(ctx: &Ctx, instance: Instance) -> gtk::Widget {
         let append_log = append_log.clone();
         let stack = ctx.stack.clone();
 
-        launch_button.connect_clicked(move |button| {
+        launch_button.clone().connect_clicked(move |button| {
             let Some(account) = ctx.state.active_account() else {
                 widgets::alert(&ctx.window, "No account", "Add an account in the sidebar first.");
                 return;
@@ -278,6 +276,8 @@ pub fn build(ctx: &Ctx, instance: Instance) -> gtk::Widget {
         let delete_button = delete_button.clone();
         delete_button.connect_clicked(move |_| {
             let ctx = ctx.clone();
+            let ctx_clone = ctx.clone();
+            let window = ctx.window.clone();
             let instance = instance.clone();
             widgets::confirm(
                 &ctx.window,
@@ -289,11 +289,11 @@ pub fn build(ctx: &Ctx, instance: Instance) -> gtk::Widget {
                 "Delete",
                 move || match instance.delete() {
                     Ok(()) => {
-                        ctx.refresh_instances();
-                        ctx.stack.set_visible_child_name("welcome");
-                        ctx.toast("Instance deleted");
+                        ctx_clone.refresh_instances();
+                        ctx_clone.stack.set_visible_child_name("welcome");
+                        ctx_clone.toast("Instance deleted");
                     }
-                    Err(err) => widgets::alert(&ctx.window, "Delete failed", &format!("{err:#}")),
+                    Err(err) => widgets::alert(&window, "Delete failed", &format!("{err:#}")),
                 },
             );
         });

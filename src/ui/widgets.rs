@@ -34,7 +34,7 @@ pub fn group(title: &str) -> adw::PreferencesGroup {
 
 /// Show a destructive confirmation. `on_confirm` runs only if the user agrees.
 pub fn confirm(
-    parent: &impl IsA<gtk::Widget>,
+    parent: &impl IsA<gtk::Window>,
     heading: &str,
     body: &str,
     confirm_label: &str,
@@ -59,7 +59,7 @@ pub fn confirm(
 }
 
 /// Show a plain informational dialog.
-pub fn alert(parent: &impl IsA<gtk::Widget>, heading: &str, body: &str) {
+pub fn alert(parent: &impl IsA<gtk::Window>, heading: &str, body: &str) {
     let dialog = adw::MessageDialog::new(Some(parent), Some(heading), Some(body));
     dialog.add_response("ok", "OK");
     dialog.set_default_response(Some("ok"));
@@ -72,7 +72,7 @@ pub fn toast(overlay: &adw::ToastOverlay, message: &str) {
 }
 
 /// Fire-and-forget URL opening.
-pub fn open_uri(parent: &impl IsA<gtk::Widget>, uri: &str) {
+pub fn open_uri(parent: &impl IsA<gtk::Window>, uri: &str) {
     let launcher = gtk::UriLauncher::new(uri);
     launcher.launch(Some(parent), None::<&gio::Cancellable>, |_| {});
 }

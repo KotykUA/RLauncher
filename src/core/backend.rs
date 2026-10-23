@@ -61,11 +61,10 @@ fn to_core_account(record: &AccountRecord) -> Account {
     }
 }
 
-fn java_policy(settings: &Settings) -> JavaInstallPolicy {
-    match settings.java_path() {
-        Some(path) => JavaInstallPolicy::Manual(path),
-        None => JavaInstallPolicy::Auto,
-    }
+fn java_policy(_settings: &Settings) -> JavaInstallPolicy {
+    // mc-launcher-core doesn't support custom Java paths via JavaInstallPolicy
+    // Custom Java is handled via LaunchOptions::java_executable instead
+    JavaInstallPolicy::Auto
 }
 
 /// Result of an install pass.
@@ -106,7 +105,7 @@ pub fn ensure_installed(
 pub fn launch(
     instance: &Instance,
     account: &AccountRecord,
-    settings: &Settings,
+    _settings: &Settings,
     version_id: &str,
     java: Option<&Path>,
     mut report: impl FnMut(&str),
