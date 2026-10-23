@@ -12,11 +12,17 @@ pub fn present(ctx: &Ctx) {
     let dialog = adw::Dialog::new();
     dialog.set_title("Preferences");
 
+    let scrolled = gtk::ScrolledWindow::builder()
+        .hscrollbar_policy(gtk::PolicyType::Never)
+        .vexpand(true)
+        .build();
+
     let content = gtk::Box::new(gtk::Orientation::Vertical, 12);
     content.set_margin_top(24);
     content.set_margin_bottom(24);
     content.set_margin_start(24);
     content.set_margin_end(24);
+    content.set_width_request(500);
 
     let page = adw::PreferencesPage::new();
 
@@ -111,7 +117,8 @@ pub fn present(ctx: &Ctx) {
     button_box.append(&save_button);
     content.append(&button_box);
 
-    dialog.set_child(Some(&content));
+    scrolled.set_child(Some(&content));
+    dialog.set_child(Some(&scrolled));
 
     let dialog_clone = dialog.clone();
     let dialog_cancel = dialog.clone();

@@ -85,6 +85,20 @@ impl Ctx {
 
         self.show_instance(id);
     }
+
+    /// Select an instance by id safely (only if it exists in the list).
+    pub fn select_instance_safe(&self, id: &str) {
+        let ids = self.ids.borrow();
+        let index = ids.iter().position(|candidate| candidate == id);
+        drop(ids);
+
+        if let Some(index) = index {
+            if let Some(row) = self.list.row_at_index(index as i32) {
+                self.list.select_row(Some(&row));
+                self.show_instance(id);
+            }
+        }
+    }
 }
 
 fn build_row(instance: &Instance) -> gtk::ListBoxRow {
@@ -317,8 +331,10 @@ pub fn build(app: &adw::Application, state: Rc<AppState>) -> adw::ApplicationWin
 
     // Restore the last instance, if it still exists.
     if let Some(last) = state.settings.borrow().last_instance.clone() {
-        if state.instance(&last).is_some() {
-            ctx.select_instance(&last);
+        let instances = state.instances.borrow();
+        if instances.iter().any(|i| &i.id == &last) {
+            drop(instances);
+            ctx.select_instance_safe(&last);
             split.set_show_content(true);
         }
     }
